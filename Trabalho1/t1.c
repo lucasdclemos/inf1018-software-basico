@@ -5,11 +5,34 @@
     - res = a >> n (aritmetico)
 */
 
-
 #include <stdio.h>
 
 #define NUM_BITS 128
 typedef unsigned char BigInt[NUM_BITS/8];
+
+void big_val (BigInt, long);
+
+void big_sum (BigInt, BigInt, BigInt);
+
+void big_comp2 (BigInt, BigInt);
+
+void big_sub (BigInt, BigInt, BigInt);
+
+void big_mul (BigInt, BigInt, BigInt);
+
+void dumpTest (BigInt);
+
+int main(void){
+    BigInt res = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+    BigInt a = {0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+    BigInt b = {0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+    /* big_val(a, (long) 255);
+    big_val(b, (long) 2); */
+    big_mul(res, a, b);
+    dumpTest(res);
+
+    return 0;
+}
 
 /* Atribuição */
 void big_val (BigInt res, long val){
@@ -45,14 +68,6 @@ void big_comp2(BigInt res, BigInt a){
     big_sum(res, auxiliar, valor1);
 }
 
-
-
-void dumpTest (BigInt valor){
-    for (int i = 0; i < 16; i++){
-        printf("%02X\n", valor[i]);
-    }
-}
-
 /* res = a - b */
 void big_sub(BigInt res, BigInt a, BigInt b){
     BigInt auxiliar;
@@ -60,14 +75,22 @@ void big_sub(BigInt res, BigInt a, BigInt b){
     big_sum(res, a, auxiliar);
 }
 
-int main(void){
-    BigInt res;
-    BigInt a;
-    BigInt b;
-    big_val(a, (long) 3);
-    big_val(b, (long) 2);
-    big_sub(res, a, b);
-    dumpTest(res);
-
-    return 0;
+/* res = a * b */
+void big_mul(BigInt res, BigInt a, BigInt b){
+    unsigned char resto = 0;
+    int temp = 0;
+    for (int i = 0; i < 2*(sizeof(long)); i++){
+        for (int j = 0; j < 2*(sizeof(long)); j++){
+            temp = ((int)a[i] * (int)b[j]) + (int)resto + (int)res[j];
+            res[j] = (unsigned char) temp;
+            resto = temp >> 8; 
+        }
+    }
 }
+
+void dumpTest (BigInt valor){
+    for (int i = 0; i < 16; i++){
+        printf("%02X\n", valor[i]);
+    }
+}
+
