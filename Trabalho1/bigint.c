@@ -1,29 +1,10 @@
-/* TO-DO LIST 
-    - res = a >> n (aritmetico)
-*/
+/* Lucas Demarco Cambraia Lemos 2110013 3WA */
+/* Lucas de Oliveira Caúla 2020557 3WB */
 
 #include <stdio.h>
-
-#define NUM_BITS 128
-typedef unsigned char BigInt[NUM_BITS/8];
-
-void big_val (BigInt, long);
-
-void big_sum (BigInt, BigInt, BigInt);
-
-void big_comp2 (BigInt, BigInt);
-
-void big_sub (BigInt, BigInt, BigInt);
-
-void big_mul (BigInt, BigInt, BigInt);
+#include "bigint.h"
 
 void dumpTest (BigInt);
-
-void big_shl (BigInt, BigInt, int);
-
-void big_shr (BigInt, BigInt, int);
-
-void big_sar (BigInt, BigInt, int);
 
 void big_copia (BigInt, BigInt);
 
@@ -33,7 +14,7 @@ int main(void){
     /* BigInt b = {0x04, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}; */
     /* big_val(a, (long) 255);
     big_val(b, (long) 2); */
-    big_sar(res, a, 1);
+    big_val(res, -2);
     /* big_mul(res, a, b); */
 
     dumpTest(res);
