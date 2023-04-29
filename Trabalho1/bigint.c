@@ -52,11 +52,12 @@ void big_sub(BigInt res, BigInt a, BigInt b){
 
 /* res = a * b */
 void big_mul(BigInt res, BigInt a, BigInt b){
+    big_val(res, 0);
     unsigned char resto = 0;
     int temp = 0;
     for (int i = 0; i < 2*(sizeof(long)); i++){
         for (int j = 0; j < 2*(sizeof(long)); j++){
-            temp = ((int)a[i] * (int)b[j]) + (int)resto + (int)res[i + j];
+            temp = (a[i] * b[j]) + resto + res[i + j];
             res[j + i] = (unsigned char) temp;
             resto = temp >> 8; 
         }
@@ -72,9 +73,13 @@ void big_copia (BigInt res, BigInt a){
 
 /* res = a << n */
 void big_shl(BigInt res, BigInt a, int n){
+    if (n == 0){
+        big_copia(res, a);
+        return;
+    }
     BigInt multiplicadorDois;
     BigInt auxiliar;
-    big_val(multiplicadorDois, (long)2);
+    big_val(multiplicadorDois, 2);
     for (int i = n; i > 0; i--){
         big_copia(auxiliar, res);
         big_mul(auxiliar, a, multiplicadorDois);
@@ -85,6 +90,10 @@ void big_shl(BigInt res, BigInt a, int n){
 
 /* res = a >> n (lógico)*/
 void big_shr(BigInt res, BigInt a, int n){
+    if (n == 0){
+        big_copia(res, a);
+        return;
+    }
     BigInt resAuxiliar = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
     int quociente = n/8;
     int resto = n%8;
@@ -139,4 +148,5 @@ void dumpTest (BigInt valor){
         printf("%02X\n", valor[i]);
     }
 }
+
 
