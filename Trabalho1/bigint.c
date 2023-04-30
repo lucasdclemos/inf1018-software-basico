@@ -4,10 +4,7 @@
 #include <stdio.h>
 #include "bigint.h"
 
-void dumpTest (BigInt);
-
 void big_copia (BigInt, BigInt);
-
 
 /* Atribuição */
 void big_val (BigInt res, long val){
@@ -164,10 +161,5 @@ void big_sar(BigInt res, BigInt a, int n){
     big_copia (res, resAuxiliar);
 }
 
-void dumpTest (BigInt valor){
-    for (int i = 15; i >= 0; i--){
-        printf("%02X\n", valor[i]);
-    }
-}
 
 
