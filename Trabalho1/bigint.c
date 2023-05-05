@@ -11,7 +11,7 @@ void big_val (BigInt res, long val){
     char* p = (char*) &val; // Linha para transformar o long em uma sequência de char
     int i;
     for (i = 0; i < 2*(sizeof(long)); i++){
-        if (i > 7){
+        if (i > 7){ // Caso i > 7, copiar byte mais significativo do long
             res[i] = *(p + 7);
         } else{
             res[i] = *(p + i);
