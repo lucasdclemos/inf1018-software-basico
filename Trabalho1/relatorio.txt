@@ -1,0 +1,23 @@
+﻿Lucas Demarco Cambraia Lemos                 Matrícula: 2110013                Turma: 3WA
+Lucas de Oliveira Caúla                 Matrícula: 2020557                Turma: 3WB
+
+
+1. Funcionamento do projeto
+
+
+Todas as funções propostas pelo enunciado estão funcionando como o esperado, tendo seu resultado garantido pelos testes de função individualmente. Em alguns casos, uma função precisa de outras, como por exemplo a big_sub que é realizada utilizando a big_sum e big_comp2 em conjunto. Foi necessário a criação de uma função auxiliar big_copia (seguindo o padrão de nomenclatura das funções), para copiar o BigInt de uma variável para outra.
+
+
+2. TDD aplicado ao trabalho
+
+
+A estratégia de testes adotada pelo grupo foi testar todas as funções para todos os casos possíveis de operações, comparando cada saída com o resultado esperado calculado manualmente. 
+Assim que essa metodologia foi definida, o roteiro foi elaborado pensando cada função separadamente.
+Para a função de atribuição (big_val), o programa de testes verifica seu funcionamento para positivos pequenos e grandes, negativos pequenos e grandes, além do valor 0.
+Para a função de complemento a 2 (big_comp2), o programa de testes também verifica seu funcionamento para valores positivos pequenos e grandes, negativos pequenos e grandes, e o valor 0.
+Para a função de soma (big_sum), foi verificado todos os casos de soma entre valores positivos e negativos, tanto pequenos quanto grandes, além de zero. 
+Para a função de subtração (big_sub), foi verificado todos os casos de subtração entre valores positivos e negativos, tanto pequenos quanto grandes, além de zero. 
+Para a função de multiplicação (big_mul), o programa de testes verifica a multiplicação entre positivos e negativos, tanto grandes como pequenos. Além disso, foi tratado o caso da multiplicação por 0.
+Para a função de deslocamento à esquerda (big_shl), o programa testa o deslocamento para valores positivos e negativos, grandes e pequenos, e zero. Os deslocamentos testados foram de 0 bits, 8 bits, 20 bits (com o propósito de testar a parte da função que considera o resto da divisão de 20 por 8) e 128 bits.
+Para a função de deslocamento lógico à direita (big_shr), o programa testa o deslocamento para valores positivos e negativos, grandes e pequenos, e zero. Os deslocamentos testados foram de 0 bits, 8 bits, 20 bits (com o propósito de testar a parte da função que considera o resto da divisão de 20 por 8) e 128 bits.
+Para a função de deslocamento aritmético à direita (big_sar), o programa testa o deslocamento para valores positivos e negativos, grandes e pequenos, e zero. Os deslocamentos testados foram de 0 bits, 8 bits, 20 bits (com o propósito de testar a parte da função que considera o resto da divisão de 20 por 8) e 128 bits.
