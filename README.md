@@ -1,4 +1,4 @@
-# inf1018-software-basico
+# INF1018 - Software Básico
 
 2023.1
 
