@@ -38,28 +38,111 @@ void realiza_operacoes(int ind_res, int ind_op1, int ind_op2, char op1, char op2
     }
     // var = var (+,-,*) constante
     if (op1 == 'v' && op2 == '$'){
-        printf("%d", ind_op2);
+        codigo[i++] = 0x8b;
+        codigo[i++] = 0x45;
+        codigo[i++] = 255 - 4*ind_op1 + 1;
+        codigo[i++] = 0xbb;
+        codigo[i++] = (ind_op2 << 24) >> 24;
+        codigo[i++] = (ind_op2 << 16) >> 24;
+        codigo[i++] = (ind_op2 << 8) >> 24;
+        codigo[i++] = ind_op2 >> 24;
         // var = var + constante
+        if (operacao == '+'){
+            codigo[i++] = 0x01;
+            codigo[i++] = 0xd8;
+        }
+        // var = var - constante
+        else if (operacao == '-'){
+            codigo[i++] = 0x29;
+            codigo[i++] = 0xd8;
+        }
+        // var = var * constante
+        else{
+            codigo[i++] = 0x0f;
+            codigo[i++] = 0xaf;
+            codigo[i++] = 0xc3;
+        }
+        codigo[i++] = 0x89;
+        codigo[i++] = 0x45;
+        codigo[i++] = 255 - 4*ind_res + 1;
+    }
+    // var = constante (+,-,*) var
+    if (op1 == '$' && op2 == 'v'){
+        // var = constante + var
         if (operacao == '+'){
             codigo[i++] = 0x8b;
             codigo[i++] = 0x45;
-            codigo[i++] = 255 - 4*ind_op1 + 1;
-            codigo[i++] = 0x83;
-            codigo[i++] = 0xc0;
-            if (ind_op2 < 128){
-                codigo[i++] = ind_op2;
-            }
-            // CONFERIR!!!!!!!!
-            else{
-                codigo[i++] = (ind_op2 << 24) >> 24;
-                codigo[i++] = (ind_op2 << 16) >> 24;
-                codigo[i++] = (ind_op2 << 8) >> 24;
-                codigo[i++] = ind_op2 >> 24;
-            }
-            codigo[i++] = 0x89;
-            codigo[i++] = 0x45;
-            codigo[i++] = 255 - 4*ind_res + 1;
+            codigo[i++] = 255 - 4*ind_op2 + 1;
+            codigo[i++] = 0xbb;
+            codigo[i++] = (ind_op1 << 24) >> 24;
+            codigo[i++] = (ind_op1 << 16) >> 24;
+            codigo[i++] = (ind_op1 << 8) >> 24;
+            codigo[i++] = ind_op1 >> 24;
+            codigo[i++] = 0x01;
+            codigo[i++] = 0xd8;
         }
+        // var = constante - var
+        if (operacao == '-'){
+            codigo[i++] = 0xb8;
+            codigo[i++] = (ind_op1 << 24) >> 24;
+            codigo[i++] = (ind_op1 << 16) >> 24;
+            codigo[i++] = (ind_op1 << 8) >> 24;
+            codigo[i++] = ind_op1 >> 24;
+            codigo[i++] = 0x8b;
+            codigo[i++] = 0x5d;
+            codigo[i++] = 255 - 4*ind_op2 + 1;
+            codigo[i++] = 0x29;
+            codigo[i++] = 0xd8;
+        }
+        // var = constante * var
+        else{
+            codigo[i++] = 0x8b;
+            codigo[i++] = 0x45;
+            codigo[i++] = 255 - 4*ind_op2 + 1;
+            codigo[i++] = 0xbb;
+            codigo[i++] = (ind_op1 << 24) >> 24;
+            codigo[i++] = (ind_op1 << 16) >> 24;
+            codigo[i++] = (ind_op1 << 8) >> 24;
+            codigo[i++] = ind_op1 >> 24;
+            codigo[i++] = 0x0f;
+            codigo[i++] = 0xaf;
+            codigo[i++] = 0xc3;
+        }
+        codigo[i++] = 0x89;
+        codigo[i++] = 0x45;
+        codigo[i++] = 255 - 4*ind_res + 1;
+    }
+    // var = constante (+,-,*) constante
+    if (op1 == '$' && op2 == '$'){
+        codigo[i++] = 0xb8;
+        codigo[i++] = (ind_op1 << 24) >> 24;
+        codigo[i++] = (ind_op1 << 16) >> 24;
+        codigo[i++] = (ind_op1 << 8) >> 24;
+        codigo[i++] = ind_op1 >> 24;
+        codigo[i++] = 0xbb;
+        codigo[i++] = (ind_op2 << 24) >> 24;
+        codigo[i++] = (ind_op2 << 16) >> 24;
+        codigo[i++] = (ind_op2 << 8) >> 24;
+        codigo[i++] = ind_op2 >> 24;
+        // var = constante + constante
+        if (operacao == '+'){
+            codigo[i++] = 0x01;
+            codigo[i++] = 0xd8;
+        }
+        // var = constante - constante
+        else if (operacao == '-'){
+            codigo[i++] = 0x29;
+            codigo[i++] = 0xd8;
+        }
+        // var = constante * constante
+        else{
+            codigo[i++] = 0x0f;
+            codigo[i++] = 0xaf;
+            codigo[i++] = 0xc3;
+        }
+        codigo[i++] = 0x89;
+        codigo[i++] = 0x45;
+        codigo[i++] = 255 - 4*ind_res + 1;
     }
 }
 
@@ -68,7 +151,7 @@ funcp gera(FILE* f, unsigned char codigo[]){
     char c;
     i = 0;
 
-    // Criação da pilha e alocação do espaço para as 5 variáveis locais permitidas
+    // Criação da pilha e alocação do espaço para as 5 variáveis locais permitidas (subq $32)
     codigo[i++] = 0x55;
     codigo[i++] = 0x48;
     codigo[i++] = 0x89;
