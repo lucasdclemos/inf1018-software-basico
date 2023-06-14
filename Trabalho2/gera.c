@@ -322,6 +322,7 @@ funcp gera(FILE* f, unsigned char codigo[]){
                 codigo[i++] = 0x00;
                 // jle
                 codigo[i++] = 0x7e;
+                // Deixa a posição do vetor codigo vazia, e irá preencher no final
                 vetor_desvios[num_desvios].pos_vazia = i;
                 vetor_desvios[num_desvios].end_origem = i;
                 vetor_desvios[num_desvios].linha_destino = linha_destino - 1;
