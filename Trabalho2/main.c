@@ -11,9 +11,10 @@ int main(void){
         exit(1);
     }
     
-
-    unsigned char codigo[300];
-    funcp funcaoSimples = gera(f, codigo);
-    printf("Retorno: %d\n", funcaoSimples(1, 2, 3));
+    unsigned char codigo[45];
+    if (gera(f, codigo) != NULL){
+        funcp funcaoSimples = gera(f, codigo);
+        printf("Retorno: %d\n", funcaoSimples(1, 2, 3));
+    }
     return 0;
 }
