@@ -35,6 +35,7 @@ void realiza_operacoes(int ind_res, int ind_op1, int ind_op2, char op1, char op2
             codigo[i++] = 0x29;
             codigo[i++] = 0xd8;
         }
+        // var = var * var
         else if (operacao == '*'){
             codigo[i++] = 0x0f;
             codigo[i++] = 0xaf;
@@ -78,14 +79,14 @@ void realiza_operacoes(int ind_res, int ind_op1, int ind_op2, char op1, char op2
     if (op1 == '$' && op2 == 'v'){
         // var = constante + var
         if (operacao == '+'){
-            codigo[i++] = 0x8b;
-            codigo[i++] = 0x45;
-            codigo[i++] = 255 - 4*ind_op2 + 1;
-            codigo[i++] = 0xbb;
+            codigo[i++] = 0xb8;
             codigo[i++] = (ind_op1 << 24) >> 24;
             codigo[i++] = (ind_op1 << 16) >> 24;
             codigo[i++] = (ind_op1 << 8) >> 24;
             codigo[i++] = ind_op1 >> 24;
+            codigo[i++] = 0x8b;
+            codigo[i++] = 0x5d;
+            codigo[i++] = 255 - 4*ind_op2 + 1;
             codigo[i++] = 0x01;
             codigo[i++] = 0xd8;
         }
@@ -103,7 +104,7 @@ void realiza_operacoes(int ind_res, int ind_op1, int ind_op2, char op1, char op2
             codigo[i++] = 0xd8;
         }
         // var = constante * var
-        else{
+        if (operacao == '*'){
             codigo[i++] = 0x8b;
             codigo[i++] = 0x45;
             codigo[i++] = 255 - 4*ind_op2 + 1;
@@ -335,11 +336,11 @@ funcp gera(FILE* f, unsigned char codigo[]){
         enderecos[linha_atual] = i;
     }
     unsigned char auxiliar;
+    // Preenche o vetor codigo com os deslocamentos calculados
     for (int x = 0; x < num_desvios; x++){
         auxiliar = enderecos[vetor_desvios[x].linha_destino] - vetor_desvios[x].end_origem - 1;
         codigo[vetor_desvios[x].pos_vazia] = auxiliar;
     }
-
     f_codigo = (funcp)codigo;
     return f_codigo;
 }

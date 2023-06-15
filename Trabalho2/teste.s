@@ -1,34 +1,14 @@
-.data
-Sf:  .string "%d\n"    # string de formato para printf
-
 .text
 .globl  main
 main:
   pushq  %rbp
   movq  %rsp, %rbp
   subq  $32, %rsp
-  movl  $-10, -4(%rbp)
-  cmpl  $0, -4(%rbp)
-  jle  teste
-  movl  $0, %eax
-  /*************************************************************/
-/* este trecho imprime o valor de %eax (estraga %eax)  */
-  movq    $Sf, %rdi    /* primeiro parametro (ponteiro)*/
-  movl    %eax, %esi   /* segundo parametro  (inteiro) */
-  call  printf       /* chama a funcao da biblioteca */
-/*************************************************************/
-  call  printf
-  leave
-  ret
-
-teste:
-  movl  -4(%rbp), %eax
-  /*************************************************************/
-/* este trecho imprime o valor de %eax (estraga %eax)  */
-  movq    $Sf, %rdi    /* primeiro parametro (ponteiro)*/
-  movl    %eax, %esi   /* segundo parametro  (inteiro) */
-  call  printf       /* chama a funcao da biblioteca */
-/*************************************************************/
-  call  printf
-  leave
+  movl  $1, -4(%rbp)
+  movl  $2, %eax
+  movl  -4(%rbp), %ebx
+  addl  %ebx, %eax
+  movl  %eax, -12(%rbp)
+  movl  -12(%rbp), %eax
+  leave 
   ret
