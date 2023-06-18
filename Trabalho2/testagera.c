@@ -13,7 +13,6 @@ int testa_gera (char nome[], unsigned char codigo[]){
     }
     if (gera(f, codigo) != NULL){
         funcp funcaoSimples = gera(f, codigo);
-        //printf("Retorno: %d\n", funcaoSimples(6));
         return funcaoSimples(1, 2, 3);
     }
     else{
@@ -179,10 +178,16 @@ int main(void){
 
     // Teste para quando uma operação não está de acordo com a Linguagem Simples
     if (testa_gera("testes/simples25.txt", codigo) == -1){
-        printf("OK -> Retorno NULL quando passa de 3 variáveis locais\n");
+        printf("OK -> Retorno NULL quando operação não está de acordo com a Linguagem Simples\n");
     }else{
-        printf("ERRO -> Retorno NULL quando passa de 3 variáveis locais\n");
+        printf("ERRO -> Retorno NULL quando operação não está de acordo com a Linguagem Simples\n");
     }
 
+    // Teste para quando é chamada uma função com várias operações
+    if (testa_gera("testes/simples26.txt", codigo) == -3){
+        printf("OK -> Função que utiliza várias variáveis e realiza várias operações\n");
+    }else{
+        printf("ERRO -> Função que utiliza várias variáveis e realiza várias operações\n");
+    }
     return 0;
 }

@@ -51,6 +51,7 @@ void realiza_operacoes(int ind_res, int ind_op1, int ind_op2, char op1, char op2
         codigo[i++] = 0x45;
         codigo[i++] = 255 - 4*ind_op1 + 1;
         codigo[i++] = 0xbb;
+        // Operações bit a bit para colocar 4 bytes da constante em little-endian
         codigo[i++] = (ind_op2 << 24) >> 24;
         codigo[i++] = (ind_op2 << 16) >> 24;
         codigo[i++] = (ind_op2 << 8) >> 24;
@@ -80,6 +81,7 @@ void realiza_operacoes(int ind_res, int ind_op1, int ind_op2, char op1, char op2
         // var = constante + var
         if (operacao == '+'){
             codigo[i++] = 0xb8;
+            // Operações bit a bit para colocar 4 bytes da constante em little-endian
             codigo[i++] = (ind_op1 << 24) >> 24;
             codigo[i++] = (ind_op1 << 16) >> 24;
             codigo[i++] = (ind_op1 << 8) >> 24;
@@ -93,6 +95,7 @@ void realiza_operacoes(int ind_res, int ind_op1, int ind_op2, char op1, char op2
         // var = constante - var
         else if (operacao == '-'){
             codigo[i++] = 0xb8;
+            // Operações bit a bit para colocar 4 bytes da constante em little-endian
             codigo[i++] = (ind_op1 << 24) >> 24;
             codigo[i++] = (ind_op1 << 16) >> 24;
             codigo[i++] = (ind_op1 << 8) >> 24;
@@ -109,6 +112,7 @@ void realiza_operacoes(int ind_res, int ind_op1, int ind_op2, char op1, char op2
             codigo[i++] = 0x45;
             codigo[i++] = 255 - 4*ind_op2 + 1;
             codigo[i++] = 0xbb;
+            // Operações bit a bit para colocar 4 bytes da constante em little-endian
             codigo[i++] = (ind_op1 << 24) >> 24;
             codigo[i++] = (ind_op1 << 16) >> 24;
             codigo[i++] = (ind_op1 << 8) >> 24;
@@ -124,11 +128,13 @@ void realiza_operacoes(int ind_res, int ind_op1, int ind_op2, char op1, char op2
     // var = constante (+,-,*) constante
     if (op1 == '$' && op2 == '$'){
         codigo[i++] = 0xb8;
+        // Operações bit a bit para colocar 4 bytes da constante em little-endian
         codigo[i++] = (ind_op1 << 24) >> 24;
         codigo[i++] = (ind_op1 << 16) >> 24;
         codigo[i++] = (ind_op1 << 8) >> 24;
         codigo[i++] = ind_op1 >> 24;
         codigo[i++] = 0xbb;
+        // Operações bit a bit para colocar 4 bytes da constante em little-endian
         codigo[i++] = (ind_op2 << 24) >> 24;
         codigo[i++] = (ind_op2 << 16) >> 24;
         codigo[i++] = (ind_op2 << 8) >> 24;
@@ -193,6 +199,7 @@ funcp gera(FILE* f, unsigned char codigo[]){
                     // Caso de retornar uma constante
                     case '$':{
                         codigo[i++] = 0xb8;
+                        // Operações bit a bit para colocar 4 bytes da constante em little-endian
                         codigo[i++] = (num << 24) >> 24;
                         codigo[i++] = (num << 16) >> 24;
                         codigo[i++] = (num << 8) >> 24;
@@ -241,6 +248,7 @@ funcp gera(FILE* f, unsigned char codigo[]){
                                 codigo[i++] = 0xc7;
                                 codigo[i++] = 0x45;
                                 codigo[i++] = 255 - 4*indice1 + 1;
+                                // Operações bit a bit para colocar 4 bytes da constante em little-endian
                                 codigo[i++] = (indice2 << 24) >> 24;
                                 codigo[i++] = (indice2 << 16) >> 24;
                                 codigo[i++] = (indice2 << 8) >> 24;

@@ -1,0 +1,44 @@
+Lucas Demarco Cambraia Lemos 2110013 3WA
+Lucas de Oliveira Caúla 2020557 3WB
+
+IMPLEMENTAÇÃO DA FUNÇÃO GERA
+Todas as operações propostas no enunciado estão funcionando corretamente. A pilha é inicializada no começo da função gera, sendo utilizada para alocar todas as variáveis locais. Como o limite de variáveis para a linguagem Simples são 5, alocamos 32 bytes para colocá-las na pilha. 
+As variáveis seguem a lógica de 4(%rbp) para v1, 8(%rbp) para v2, etc., ou seja, 4*indice(%rbp).
+Para todas as operações realizadas, utilizamos registradores auxiliares, por exemplo, em uma soma, o primeiro operando é movido para %eax e o segundo para %ebx. O resultado é colocado na pilha, de acordo com o índice da variável. Fazendo isso, percebemos que que o código de máquina para isso é 255 - 4*indice + 1. Assim, para movimentar a variável v1 (4(%rbp)), devemos colocar 255 - 4*1 + 1, que é igual a fc em hexadecimal.
+Para os casos de mover uma constante para uma variável auxiliar, utilizamos o deslocamento de bits, já que deveria estar em little-endian. 
+Encontramos maior dificuldade para fazer os desvios condicionais, mas optamos por utilizar um vetor de structs auxiliar. Sempre que entrasse no case de iflez, pulamos uma posição do vetor codigo e salvamos ela, além do endereço de origem, ou seja, a posição da próxima instrução e para onde deseja-se ir. Após chegar no final do arquivo simples.txt, verificamos o vetor de structs, para, caso seja necessário, preencher as posições que ficaram vazias no vetor codigo.
+
+IMPLEMENTAÇÃO DOS TESTES AUTOMATIZADOS
+Para os testes automatizados, buscamos verificar cada caso separadamente, desde mais simples, como retorno e atribuição, até mais complexos, como desvios condicionais. Além disso, testamos os casos em que o arquivo simples não seguia as orientações da semântica da linguagem Simples, ou seja, quando as variáveis locais passam de 5, quando os parâmetros passam de 3, ou quando algum comando inesperado é adicionado.
+Seguem abaixo alguns exemplos de arquivos Simples que adicionamos e, assim como todos os testes implementados, obtiveram sucesso:
+
+simples9.txt -> teste para atribuição de um parãmetro para uma variável local
+v1 < p1
+ret v1
+
+simples18.txt -> teste para a multiplicação entre variáveis
+v1 < $1
+v3 = v1 * $2
+ret v3
+
+simples22.txt -> teste para desvios para linhas anteriores, como se fosse um loop (função fatorial)
+v1 < $4
+v2 < $1
+v3 < $0
+iflez v1 8
+v2 = v2 * v1
+v1 = v1 - $1
+iflez v3 4
+ret v2
+
+simples23.txt -> teste para quando tentamos usar uma variável v6 (implementamos para a função gera retornar NULL)
+v6 < $1
+ret v6
+
+simples26.txt -> teste com uma função grande que utiliza várias variáveis, parâmetros e operações
+v1 < p1
+v2 < p2
+v3 = v1 + v2
+v4 = v1 - v2
+v1 = v3 * v4
+ret v1   
