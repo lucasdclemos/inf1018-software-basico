@@ -66,7 +66,7 @@ void realiza_operacoes(int ind_res, int ind_op1, int ind_op2, char op1, char op2
             codigo[i++] = 0xd8;
         }
         // var = var * constante
-        else{
+        else if (operacao == '*'){
             codigo[i++] = 0x0f;
             codigo[i++] = 0xaf;
             codigo[i++] = 0xc3;
@@ -91,7 +91,7 @@ void realiza_operacoes(int ind_res, int ind_op1, int ind_op2, char op1, char op2
             codigo[i++] = 0xd8;
         }
         // var = constante - var
-        if (operacao == '-'){
+        else if (operacao == '-'){
             codigo[i++] = 0xb8;
             codigo[i++] = (ind_op1 << 24) >> 24;
             codigo[i++] = (ind_op1 << 16) >> 24;
@@ -104,7 +104,7 @@ void realiza_operacoes(int ind_res, int ind_op1, int ind_op2, char op1, char op2
             codigo[i++] = 0xd8;
         }
         // var = constante * var
-        if (operacao == '*'){
+        else if (operacao == '*'){
             codigo[i++] = 0x8b;
             codigo[i++] = 0x45;
             codigo[i++] = 255 - 4*ind_op2 + 1;
@@ -144,7 +144,7 @@ void realiza_operacoes(int ind_res, int ind_op1, int ind_op2, char op1, char op2
             codigo[i++] = 0xd8;
         }
         // var = constante * constante
-        else{
+        else if (operacao == '*'){
             codigo[i++] = 0x0f;
             codigo[i++] = 0xaf;
             codigo[i++] = 0xc3;
@@ -182,7 +182,11 @@ funcp gera(FILE* f, unsigned char codigo[]){
                 char tipo;
                 int num;
                 if (fscanf(f, "et %c%d\n", &tipo, &num) != 2){
-                    printf("Comando não reconhecido pela Linguagem Simples");
+                    return NULL;
+                }
+                // Verifica o índice de variáveis locais
+                if (num > 5){
+                    return NULL;
                 }
                 // Verificar qual tipo (variável ou constante) está sendo retornado
                 switch(tipo){
@@ -206,6 +210,8 @@ funcp gera(FILE* f, unsigned char codigo[]){
                         codigo[i++] = 0xc3; // ret
                         break;
                     }
+                    default: 
+                    return NULL;    
                 }
                 break;
             }
@@ -216,19 +222,18 @@ funcp gera(FILE* f, unsigned char codigo[]){
                 int indice1;
                 int indice2;
                 if (fscanf(f, "%d %c\n", &indice1, &operacao) != 2){
-                    printf("Comando não reconhecido pela Linguagem Simples\n");
+                    return NULL;
                     break;
                 }
                 // Verifica se o índice da variável criada é maior que o número de variáveis permitidas
                 if (indice1 > 5){
-                    printf("Número de variáveis excedido!\n");
-                    break;
+                    return NULL;
                 }
                 // Verificar se é atribuição ou operação aritmética
                 switch(operacao){
                     case '<':{
                         if (fscanf(f, " %c%d\n", &tipo, &indice2) != 2){
-                            printf("Comando não reconhecido pela Linguagem Simples\n");
+                            return NULL;
                         }
                         switch(tipo){
                             // var = constante
@@ -256,8 +261,7 @@ funcp gera(FILE* f, unsigned char codigo[]){
                             case 'p':{
                                 // Verificar se o número de parâmetros ultrapassou o máximo permitido
                                 if(indice2 > 3){
-                                    printf("Número máximo de parâmetros excedido");
-                                    break;
+                                    return NULL;
                                 }
                                 // Verificar qual é o parâmetro (primeiro, segundo, terceiro)
                                 switch(indice2){
@@ -279,9 +283,13 @@ funcp gera(FILE* f, unsigned char codigo[]){
                                         codigo[i++] = 255 - 4*indice1 + 1;
                                         break;
                                     }
+                                    default: 
+                                    return NULL;
                                 }
                                 break;
                             }
+                            default: 
+                            return NULL;
                         }
                         break;
                     }
@@ -292,13 +300,17 @@ funcp gera(FILE* f, unsigned char codigo[]){
                         int ind_operando2;
                         char sinal;
                         if (fscanf(f, " %c%d %c %c%d\n", &operando1, &ind_operando1, &sinal, &operando2, &ind_operando2) != 5){
-                            printf("Comando não reconhecido pela Linguagem Simples\n");
-                            break;
+                            return NULL;
+                        }
+                        if (sinal != '+' && sinal != '-' && sinal != '*'){
+                            return NULL;
                         }
                         // Função responsável por tratar de todas as operações
                         realiza_operacoes(indice1, ind_operando1, ind_operando2, operando1, operando2, sinal, codigo);
                         break;
                     }
+                    default: 
+                    return NULL;
                 }
                 break;
             }
@@ -308,12 +320,10 @@ funcp gera(FILE* f, unsigned char codigo[]){
                 int linha_destino;
                 char auxiliar;
                 if (fscanf(f, "flez %c%d %d\n", &auxiliar, &indice1, &linha_destino) != 3){
-                    printf("Comando não reconhecido pela Linguagem Simples\n");
-                    break;
+                    return NULL;
                 }
                 // Verifica se o índice da variável criada é maior que o número de variáveis permitidas
                 if (indice1 > 5){
-                    printf("Número de variáveis excedido!\n");
                     return NULL;
                 }
                 // cmpl  $0, variavel
@@ -330,7 +340,9 @@ funcp gera(FILE* f, unsigned char codigo[]){
                 i++;
                 num_desvios++;
                 break;
-            }          
+            } 
+            default: 
+            return NULL;         
         }
         linha_atual++;
         enderecos[linha_atual] = i;

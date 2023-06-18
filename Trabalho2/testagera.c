@@ -16,10 +16,13 @@ int testa_gera (char nome[], unsigned char codigo[]){
         //printf("Retorno: %d\n", funcaoSimples(6));
         return funcaoSimples(1, 2, 3);
     }
+    else{
+        return -1;
+    }
     return 0;
 }
 
-int main(){
+int main(void){
     unsigned char codigo[1000];
 
     // Caso de retornos simples de variáveis e atribuição de parâmetros
@@ -85,7 +88,7 @@ int main(){
         printf("ERRO -> variavel = variavel\n");
     }
 
-    // Soma variavel + varivavel 
+    // Soma 
     if (testa_gera("testes/simples11.txt", codigo) == 3){
         printf("OK -> variavel = variavel + variavel\n");
     }else{
@@ -103,5 +106,83 @@ int main(){
     }else{
         printf("ERRO -> variavel = constante + variavel\n");
     }
+
+    // Subtração 
+    if (testa_gera("testes/simples14.txt", codigo) == 0){
+        printf("OK -> variavel = variavel - variavel\n");
+    }else{
+        printf("ERRO -> variavel = variavel - variavel\n");
+    }
+
+    if (testa_gera("testes/simples15.txt", codigo) == 0){
+        printf("OK -> variavel = variavel - constante\n");
+    }else{
+        printf("ERRO -> variavel = variavel - constante\n");
+    }
+    
+    if (testa_gera("testes/simples16.txt", codigo) == 1){
+        printf("OK -> variavel = constante - variavel\n");
+    }else{
+        printf("ERRO -> variavel = constante - variavel\n");
+    }
+
+    // Multiplicação 
+    if (testa_gera("testes/simples17.txt", codigo) == 1){
+        printf("OK -> variavel = variavel * variavel\n");
+    }else{
+        printf("ERRO -> variavel = variavel * variavel\n");
+    }
+
+    if (testa_gera("testes/simples18.txt", codigo) == 2){
+        printf("OK -> variavel = variavel * constante\n");
+    }else{
+        printf("ERRO -> variavel = variavel * constante\n");
+    }
+    
+    if (testa_gera("testes/simples19.txt", codigo) == 3){
+        printf("OK -> variavel = constante * variavel\n");
+    }else{
+        printf("ERRO -> variavel = constante * variavel\n");
+    }
+
+    // Desvio 
+    if (testa_gera("testes/simples20.txt", codigo) == 0){
+        printf("OK -> Desvio para linha depois do if\n");
+    }else{
+        printf("ERRO -> Desvio para linha depois do if\n");
+    }
+
+    if (testa_gera("testes/simples21.txt", codigo) == 1){
+        printf("OK -> Não desvia, pois é maior que 0\n");
+    }else{
+        printf("ERRO -> Não desvia, pois é maior que 0\n");
+    }
+
+    // Função Recursiva a partir de parâmetros (p1, p2, p3)
+    if (testa_gera("testes/simples22.txt", codigo) == 24){
+        printf("OK -> Desvio para linha anterior (loop) -> Função Fatorial\n");
+    }else{
+        printf("ERRO -> Desvio para linha anterior (loop) -> Função Fatorial\n");
+    }
+
+    // Teste para quando exceder número de variáveis ou parâmetros
+    if (testa_gera("testes/simples23.txt", codigo) == -1){
+        printf("OK -> Retorno NULL quando passa de 5 variáveis locais\n");
+    }else{
+        printf("ERRO -> Retorno NULL quando passa de 5 variáveis locais\n");
+    }
+    if (testa_gera("testes/simples24.txt", codigo) == -1){
+        printf("OK -> Retorno NULL quando passa de 3 variáveis locais\n");
+    }else{
+        printf("ERRO -> Retorno NULL quando passa de 3 variáveis locais\n");
+    }
+
+    // Teste para quando uma operação não está de acordo com a Linguagem Simples
+    if (testa_gera("testes/simples25.txt", codigo) == -1){
+        printf("OK -> Retorno NULL quando passa de 3 variáveis locais\n");
+    }else{
+        printf("ERRO -> Retorno NULL quando passa de 3 variáveis locais\n");
+    }
+
     return 0;
 }
